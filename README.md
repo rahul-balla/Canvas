@@ -1,8 +1,8 @@
-# Lab 7 - *Name of App Here*
+# Lab 7 - *Canvas*
 
-**Name of your app** is an app that allows users to use gestures in order to create fun pictures using a variety of images.
+**Canvas** is an app that allows users to use gestures in order to create fun pictures using a variety of images.
 
-Time spent: **X** hours spent in total
+Time spent: **1** hours spent in total
 
 ## User Stories
 
@@ -53,7 +53,7 @@ Describe any challenges encountered while building the app.
 
 ## License
 
-    Copyright [yyyy] [name of copyright owner]
+    Copyright [2018] [Rahul Balla]
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
