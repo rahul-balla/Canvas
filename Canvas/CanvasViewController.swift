@@ -44,14 +44,14 @@ class CanvasViewController: UIViewController {
         
         else if (sender.state == .ended){
             if (velocity.y > 0){
-                UIView.animate(withDuration: 0.3, animations: {
+                UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1, options: [], animations: {() -> Void in
                     self.trayView.center = self.trayDown
-                })
+                }, completion: nil)
             }
             else{
-                UIView.animate(withDuration: 0.3, animations: {
+                UIView.animate(withDuration: 0.4, delay: 0, options: [], animations: {
                     self.trayView.center = self.trayUp
-                })
+                }, completion: nil)
             }
         }
     }
@@ -68,10 +68,14 @@ class CanvasViewController: UIViewController {
             newlyCreatedFace.center.y += trayView.frame.origin.y
             newlyCreatedFaceOriginalCenter = newlyCreatedFace.center
             
-            let panFaceGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panFace(sender:)))
+            let panFaceGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(didPan(sender:)))
+            let pinchFaceGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(didPinch(sender:)))
+            let rotateFaceGestureRecognizer = UIRotationGestureRecognizer(target: self, action: #selector(didRotate(sender:)))
             
             newlyCreatedFace.isUserInteractionEnabled = true
             newlyCreatedFace.addGestureRecognizer(panFaceGestureRecognizer)
+            newlyCreatedFace.addGestureRecognizer(pinchFaceGestureRecognizer)
+            newlyCreatedFace.addGestureRecognizer(rotateFaceGestureRecognizer)
             self.newlyCreatedFace.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
         }
         
@@ -84,7 +88,7 @@ class CanvasViewController: UIViewController {
         }
     }
     
-    @objc func panFace(sender: UIPanGestureRecognizer){
+    @objc func didPan(sender: UIPanGestureRecognizer){
         let translation = sender.translation(in: view)
         
         if(sender.state == .began){
@@ -100,6 +104,50 @@ class CanvasViewController: UIViewController {
         else if (sender.state == .ended){
             self.newlyCreatedFace.transform = CGAffineTransform.identity
 
+        }
+    }
+    
+    @objc func didPinch(sender: UIPinchGestureRecognizer){
+        
+        if(sender.state == .began){
+            let scale = sender.scale
+            let imageView = sender.view as! UIImageView
+            imageView.transform = newlyCreatedFace.transform.scaledBy(x: scale, y: scale)
+            sender.scale = 1
+        }
+        else if(sender.state == .changed){
+            let scale = sender.scale
+            let imageView = sender.view as! UIImageView
+            imageView.transform = newlyCreatedFace.transform.scaledBy(x: scale, y: scale)
+            sender.scale = 1
+        }
+        
+        else if(sender.state == .ended){
+            
+        }
+    }
+    
+    @objc func didRotate(sender: UIRotationGestureRecognizer){
+        let rotate = sender.rotation
+        let imageView = sender.view as! UIImageView
+        imageView.transform = newlyCreatedFace.transform.rotated(by: rotate)
+        sender.rotation = 0
+        
+        if(sender.state == .began){
+            let rotate = sender.rotation
+            let imageView = sender.view as! UIImageView
+            imageView.transform = newlyCreatedFace.transform.rotated(by: rotate)
+            sender.rotation = 0
+        }
+        else if(sender.state == .changed){
+            let rotate = sender.rotation
+            let imageView = sender.view as! UIImageView
+            imageView.transform = newlyCreatedFace.transform.rotated(by: rotate)
+            sender.rotation = 0
+        }
+            
+        else if(sender.state == .ended){
+            
         }
     }
     
