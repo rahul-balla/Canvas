@@ -16,6 +16,9 @@ class CanvasViewController: UIViewController {
     let trayDownOffset: CGFloat = 205
     var trayUp: CGPoint!
     var trayDown: CGPoint!
+    var newlyCreatedFace: UIImageView!
+    var newlyCreatedFaceOriginalCenter: CGPoint!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,6 +53,53 @@ class CanvasViewController: UIViewController {
                     self.trayView.center = self.trayUp
                 })
             }
+        }
+    }
+    
+    
+    @IBAction func didPanFace(_ sender: UIPanGestureRecognizer) {
+        let translation = sender.translation(in: view)
+        
+        if(sender.state == .began){
+            var imageView = sender.view as! UIImageView
+            newlyCreatedFace = UIImageView(image: imageView.image)
+            view.addSubview(newlyCreatedFace)
+            newlyCreatedFace.center = imageView.center
+            newlyCreatedFace.center.y += trayView.frame.origin.y
+            newlyCreatedFaceOriginalCenter = newlyCreatedFace.center
+            
+            let panFaceGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panFace(sender:)))
+            
+            newlyCreatedFace.isUserInteractionEnabled = true
+            newlyCreatedFace.addGestureRecognizer(panFaceGestureRecognizer)
+            self.newlyCreatedFace.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
+        }
+        
+        else if(sender.state == .changed){
+            newlyCreatedFace.center = CGPoint(x: newlyCreatedFaceOriginalCenter.x + translation.x, y: newlyCreatedFaceOriginalCenter.y + translation.y)
+        }
+        
+        else if (sender.state == .ended){
+            self.newlyCreatedFace.transform = CGAffineTransform.identity
+        }
+    }
+    
+    @objc func panFace(sender: UIPanGestureRecognizer){
+        let translation = sender.translation(in: view)
+        
+        if(sender.state == .began){
+            var imageView = sender.view as! UIImageView
+            newlyCreatedFaceOriginalCenter = newlyCreatedFace.center
+            self.newlyCreatedFace.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
+        }
+            
+        else if (sender.state == .changed){
+            newlyCreatedFace.center = CGPoint(x: newlyCreatedFaceOriginalCenter.x + translation.x, y: newlyCreatedFaceOriginalCenter.y + translation.y)
+        }
+            
+        else if (sender.state == .ended){
+            self.newlyCreatedFace.transform = CGAffineTransform.identity
+
         }
     }
     
